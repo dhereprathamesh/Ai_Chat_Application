@@ -35,25 +35,29 @@ const Sidebar = () => {
           icon={faBars}
           onClick={() => setExtended((prev) => !prev)}
         />
-        <div className="new-chat" onClick={() => newChat()}>
+        <div className="new-chat" onClick={newChat}>
           <FontAwesomeIcon icon={faPlus} />
-          {extended ? <p>New Chat</p> : null}
+          {extended && <p>New Chat</p>}
         </div>
-        {extended ? (
+        {extended && (
           <div className="recent">
             <p className="recent-title">Recent</p>
-            {prevPrompts.map((item, index) => (
-              <div
-                key={index}
-                className="recent-entry"
-                onClick={() => loadPrompt(item)}
-              >
-                <FontAwesomeIcon icon={faComment} />
-                <p>{item.slice(0, 18)}...</p>
-              </div>
-            ))}
+            {prevPrompts.length > 0 ? (
+              prevPrompts.map((item, index) => (
+                <div
+                  key={index}
+                  className="recent-entry"
+                  onClick={() => loadPrompt(item)}
+                >
+                  <FontAwesomeIcon icon={faComment} />
+                  <p>{item.length > 18 ? `${item.slice(0, 18)}...` : item}</p>
+                </div>
+              ))
+            ) : (
+              <p>No recent searches</p>
+            )}
           </div>
-        ) : null}
+        )}
       </div>
 
       <div className="bottom">
@@ -62,7 +66,7 @@ const Sidebar = () => {
           onClick={() => setShowHelp(true)}
         >
           <FontAwesomeIcon icon={faQuestionCircle} />
-          {extended ? <p>Help</p> : null}
+          {extended && <p>Help</p>}
         </div>
 
         <div
@@ -70,7 +74,7 @@ const Sidebar = () => {
           onClick={() => setShowActivity(true)}
         >
           <FontAwesomeIcon icon={faHistory} />
-          {extended ? <p>Activity</p> : null}
+          {extended && <p>Activity</p>}
         </div>
 
         <div
@@ -78,7 +82,7 @@ const Sidebar = () => {
           onClick={() => setShowSettings(true)}
         >
           <FontAwesomeIcon icon={faCog} />
-          {extended ? <p>Settings</p> : null}
+          {extended && <p>Settings</p>}
         </div>
       </div>
 

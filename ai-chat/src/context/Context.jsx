@@ -13,15 +13,15 @@ const ContextProvider = (props) => {
   const [resultData, setResultData] = useState("");
 
   const delayPara = (index, nextWord) => {
-    setTimeout(function () {
+    setTimeout(() => {
       setResultData((prev) => prev + nextWord);
     }, 75 * index);
   };
 
   const handleResponse = (response) => {
     let responseArray = response.split("**");
-
     let newResponse = "";
+
     for (let i = 0; i < responseArray.length; i++) {
       if (i === 0 || i % 2 !== 1) {
         newResponse += responseArray[i];
@@ -29,8 +29,10 @@ const ContextProvider = (props) => {
         newResponse += "<b>" + responseArray[i] + "</b>";
       }
     }
+
     let newResponse2 = newResponse.split("*").join("</br>");
     let newResponseArray = newResponse2.split(" ");
+
     for (let i = 0; i < newResponseArray.length; i++) {
       const nextWord = newResponseArray[i];
       delayPara(i, nextWord + " ");
@@ -47,15 +49,16 @@ const ContextProvider = (props) => {
     setLoading(true);
     setShowResult(true);
     let response;
+
     try {
-      if (prompt !== undefined) {
-        response = await runChat(prompt);
-        setRecentPrompt(prompt);
-      } else {
-        setPrevPrompts((prev) => [...prev, input]);
-        setRecentPrompt(input);
-        response = await runChat(input);
-      }
+      const promptToSend = prompt || input;
+      setPrevPrompts((prev) => {
+        const updatedPrompts = [...prev, promptToSend];
+        return updatedPrompts;
+      });
+      setRecentPrompt(promptToSend);
+
+      response = await runChat(promptToSend);
 
       if (!response) {
         throw new Error("No response from AI");
@@ -78,7 +81,6 @@ const ContextProvider = (props) => {
 
   const contextValue = {
     prevPrompts,
-    setPrevPrompts,
     onSent,
     setRecentPrompt,
     recentPrompt,
